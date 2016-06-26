@@ -73,14 +73,19 @@ namespace FoodWarDecisionEngine
         {
             List<string> allFoodStrings = new List<string>();
 
+
+
             if(allTags.Count > 0)
             {
                 allFoodStrings.Clear();
-                allPossibleFoods.Clear();
                 foreach(Tag currentTag in allTags)
                 {
                     allFoodStrings.Add(currentTag.name);
-                    allPossibleFoods.Add(currentTag.name, 0);
+                    // if the food has NOT already been shouted, add a new entry
+                    if (!allPossibleFoods.ContainsKey(currentTag.name))
+                    {
+                        allPossibleFoods.Add(currentTag.name, 0);
+                    }
                 }
             }
 
@@ -118,6 +123,8 @@ namespace FoodWarDecisionEngine
 
             // get all tag IDs
             JsonArray IDsArray = fileDataAsJsonObj.GetNamedArray("tags");
+
+            allTags.Clear();
 
             foreach (JsonValue IDJsonVal in IDsArray)
             {
