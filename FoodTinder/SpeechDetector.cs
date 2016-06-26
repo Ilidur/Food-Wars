@@ -17,17 +17,17 @@ using Windows.UI.Xaml.Navigation;
 
 namespace FoodTinder
 {
-    class SpeachDetector
+    class SpeechDetector
     {
         CoreDispatcher dispatcher;
         public Func<Task> SwapPageCallback;
         public Action<string> PickedFood;
 
-        public Windows.Media.SpeechRecognition.SpeechRecognizer speachRecognizer;
+        public Windows.Media.SpeechRecognition.SpeechRecognizer speechRecognizer;
         List<string> constraints;
 
 
-        public SpeachDetector(List<string> constraintItems, CoreDispatcher newDispacher)
+        public SpeechDetector(List<string> constraintItems, CoreDispatcher newDispacher)
         {
             constraints = constraintItems;
             dispatcher = newDispacher;
@@ -35,7 +35,7 @@ namespace FoodTinder
 
         public async Task Initialise()
         {
-            speachRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+            speechRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
             await OnSearchStart();
         }
@@ -48,15 +48,10 @@ namespace FoodTinder
         
         public async Task OnSearchStop()
         {
-            //if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
-            { 
-                //await this.speachRecognizer.StopRecognitionAsync();
-
-                this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated -= OnSpeechResult;
+            this.speechRecognizer.ContinuousRecognitionSession.ResultGenerated -= OnSpeechResult;
                 
-                speachRecognizer.Dispose();
-                speachRecognizer = null;
-            }
+            speechRecognizer.Dispose();
+            speechRecognizer = null;
         }
 
         public async Task StartMessageListener()
@@ -69,12 +64,12 @@ namespace FoodTinder
 
         public async Task StartListeningForConstraintAsync(Windows.Media.SpeechRecognition.ISpeechRecognitionConstraint constraint)
         {
-            this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated += OnSpeechResult;
+            this.speechRecognizer.ContinuousRecognitionSession.ResultGenerated += OnSpeechResult;
 
-            speachRecognizer.Constraints.Clear();
-            speachRecognizer.Constraints.Add(constraint);
-            await speachRecognizer.CompileConstraintsAsync() ;
-            await speachRecognizer.ContinuousRecognitionSession.StartAsync();
+            speechRecognizer.Constraints.Clear();
+            speechRecognizer.Constraints.Add(constraint);
+            await speechRecognizer.CompileConstraintsAsync() ;
+            await speechRecognizer.ContinuousRecognitionSession.StartAsync();
             
         }
 

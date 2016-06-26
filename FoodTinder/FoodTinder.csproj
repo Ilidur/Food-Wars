@@ -102,7 +102,7 @@
     <Compile Include="MyUserControl1.xaml.cs">
       <DependentUpon>MyUserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpeachDetector.cs" />
+    <Compile Include="SpeechDetector.cs" />
     <Compile Include="SuggestionPage.xaml.cs">
       <DependentUpon>SuggestionPage.xaml</DependentUpon>
     </Compile>

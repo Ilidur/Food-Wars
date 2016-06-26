@@ -8,23 +8,17 @@ using Windows.Storage;
 
 namespace FoodWarDecisionEngine
 {
-    class FoodChoice
-    {
-        public string name = "DefaultObj";
-        public List<string> suggestions = new List<string>();
-    }
-
     class Tag
     {
-        public int number;
-        public string name;
+        public int ID; // 1
+        public string name; // pizza
     }
 
     class Restaurant
     {
-        public string name;
-        public List<Tag> tags = new List<Tag>();
-        public string rating;
+        public string name; // pizza express
+        public List<Tag> tags = new List<Tag>(); // (1,pizza), (2,burgers)
+        public string rating; // whatever
     }
 
     class DecisionStorage
@@ -90,6 +84,36 @@ namespace FoodWarDecisionEngine
             return allFoodStrings;
         }
 
+        public static List<Tag> GetListOfAllTags()
+        {
+            List<Tag> allFoodTags = new List<Tag>();
+
+            if (allTags.Count > 0)
+            {
+                foreach (Tag currentTag in allTags)
+                {
+                    allFoodTags.Add(currentTag);
+                }
+            }
+
+            return allFoodTags;
+        }
+
+        public static List<Restaurant> GetListOfAllRestaurants()
+        {
+            List<Restaurant> allRestaurantsList = new List<Restaurant>();
+
+            if (allRestaurants.Count > 0)
+            {
+                foreach (Restaurant currentRestaurant in allRestaurants)
+                {
+                    allRestaurantsList.Add(currentRestaurant);
+                }
+            }
+
+            return allRestaurantsList;
+        }
+
         public static async void Deserialize(string JsonFileName)
         {
             // read the file
@@ -130,8 +154,8 @@ namespace FoodWarDecisionEngine
             {
                 JsonObject IDJsonObj = IDJsonVal.GetObject();
                 Tag newTag = new Tag();
-                newTag.number = (int)IDJsonObj.GetNamedNumber("id");
-                newTag.name = IDsArray.GetObjectAt((uint)newTag.number - 1).GetNamedString("name");
+                newTag.ID = (int)IDJsonObj.GetNamedNumber("id");
+                newTag.name = IDsArray.GetObjectAt((uint)newTag.ID - 1).GetNamedString("name");
 
                 allTags.Add(newTag);
             }
@@ -149,8 +173,8 @@ namespace FoodWarDecisionEngine
                 for (int i = 0; i < tagsArray.Count; ++i)
                 {
                     Tag newTag = new Tag();
-                    newTag.number = (int)tagsArray.GetNumberAt((uint)i);
-                    newTag.name = IDsArray.GetObjectAt((uint)newTag.number - 1).GetNamedString("name");
+                    newTag.ID = (int)tagsArray.GetNumberAt((uint)i);
+                    newTag.name = IDsArray.GetObjectAt((uint)newTag.ID - 1).GetNamedString("name");
 
                     newRestaurant.tags.Add(newTag);
                 }

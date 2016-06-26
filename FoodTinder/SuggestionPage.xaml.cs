@@ -5,16 +5,8 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
@@ -48,9 +40,9 @@ namespace FoodTinder
         private int numOfTracks;
         private List<bool> trackValidity;
 
-        //Speach Detection
+        //Speech Detection
         List<string> constraints;
-        SpeachDetector detector;
+        SpeechDetector detector;
 
 
         public SuggestionPage()
@@ -99,7 +91,7 @@ namespace FoodTinder
         {
                 constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
 
-            detector = new SpeachDetector(constraints, Dispatcher);
+            detector = new SpeechDetector(constraints, Dispatcher);
             await detector.Initialise();
                 detector.PickedFood += PickSuggestion;
 
