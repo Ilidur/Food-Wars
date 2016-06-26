@@ -27,7 +27,7 @@ namespace FoodTinder
     public sealed partial class LandingPage : Page
     {
         //private DispatcherTimer timer;
-        private SpeachDetector detector;
+        private SpeechDetector detector;
 
         List<string> keyWords;
 
@@ -43,7 +43,7 @@ namespace FoodTinder
             keyWords = new List<string>();
             keyWords.Add("start");
 
-            detector = new SpeachDetector(keyWords, Dispatcher);
+            detector = new SpeechDetector(keyWords, Dispatcher);
 
             detector.SwapPageCallback += SwapPage;
             detector.Initialise();
