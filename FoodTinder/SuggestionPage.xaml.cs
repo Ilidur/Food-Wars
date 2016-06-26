@@ -39,13 +39,17 @@ namespace FoodTinder
 
         //Suggestions
         private List<string> listOfFoodTypes;
-        private Dictionary<string, bool> suggestionTracker;
         private Dictionary<string, Grid> activeSuggestions;
         private Dictionary<string, Grid> pickedSuggestions;
 
         //Spawn control
         private int numOfTracks;
         private List<bool> trackValidity;
+
+        //Speach Detection
+        List<string> constraints;
+        SpeachDetector detector;
+
 
         public SuggestionPage()
         {
@@ -75,17 +79,12 @@ namespace FoodTinder
 
             //Suggestions manager stuff
             activeSuggestions = new Dictionary<string, Grid>();
-            suggestionTracker = new Dictionary<string, bool>();
 
-            //Populate propper
-            suggestionTracker.Add("Chips", true);
-            suggestionTracker.Add("Fish", true);
-            suggestionTracker.Add("Burger", true);
-            suggestionTracker.Add("Steak", true);
-            suggestionTracker.Add("Sushi", true);
-            suggestionTracker.Add("Chicken", true);
+            detector = new SpeachDetector(constraints);
+            detector.PickedFood += PickSuggestion;
 
-            listOfFoodTypes = new List<string>(suggestionTracker.Keys);
+            listOfFoodTypes = new List<string>(constraints);
+            
         }
 
         //ADD SPAWNER PROPER
@@ -175,23 +174,15 @@ namespace FoodTinder
             if (!activeSuggestions.ContainsKey(type) && trackNum != -1)
             {
                 OccupyTrack(trackNum, 2000);
-                bool tempTag = GetTypeAcceptDeny(type);
 
                 Grid suggestion = new Grid();
                 suggestion.Width = 100f;
                 suggestion.Height = 100f;
-                if(tempTag)
-                {
-                    suggestion.Background = new SolidColorBrush(Windows.UI.Colors.Green);
-                }
-                else
-                {
-                    suggestion.Background = new SolidColorBrush(Windows.UI.Colors.Red);
-                }
+                suggestion.Background = new SolidColorBrush(Windows.UI.Colors.Gray); //Set to green if picked
                 Canvas.SetTop(suggestion, 100); //CHANGE THIS
                 Canvas.SetLeft(suggestion, trackNum * RenderSize.Width / numOfTracks + 20);
                 suggestion.Name = type;
-                suggestion.Tag = tempTag;
+                suggestion.Tag = false; //Set to true if picked
                 mainCanvas.Children.Add(suggestion);
 
                 TextBlock foodType = new TextBlock();
@@ -208,17 +199,6 @@ namespace FoodTinder
             }
         }
         
-        /// <summary>
-        /// Changes the accept deny value of the suggestion type.
-        /// </summary>
-        /// <param name="type">Type to change for</param>
-        /// <returns>The new type</returns>
-        private bool GetTypeAcceptDeny(string type)
-        {
-                suggestionTracker[type] = !suggestionTracker[type];
-                return suggestionTracker[type];
-        }
-
         /// <summary>
         /// Call when animation for travel finishes.
         /// 

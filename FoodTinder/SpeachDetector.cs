@@ -19,6 +19,7 @@ namespace FoodTinder
     class SpeachDetector
     {
         public Action SwapPageCallback;
+        public Action<string> PickedFood;
 
         Windows.Media.SpeechRecognition.SpeechRecognizer speachRecognizer;
         List<string> constraints;
@@ -33,6 +34,11 @@ namespace FoodTinder
         public async Task OnSearchStart()
         {
             await this.StartMessageListener();
+        }
+        
+        public async Task OnSearchStop()
+        {
+            await this.speachRecognizer.StopRecognitionAsync();
         }
 
         async Task StartMessageListener()
@@ -72,7 +78,15 @@ namespace FoodTinder
 
                 if (constraints.Contains(args.Result.Text.ToLower()))
                 {
-                    SwapPageCallback();
+                    if(SwapPageCallback != null)
+                    {
+                        SwapPageCallback();
+                    }
+                    else
+                    {
+                        PickedFood(args.Result.Text);
+                    }
+                    
                     //AddVote(speachRecogniztionResult.Text);
                 }
             }

@@ -59,6 +59,7 @@ namespace FoodTinder
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
+                detector.OnSearchStop();
                 this.Frame.Navigate(typeof(SuggestionPage));
             });
 
