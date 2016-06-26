@@ -73,8 +73,6 @@ namespace FoodWarDecisionEngine
         {
             List<string> allFoodStrings = new List<string>();
 
-
-
             if(allTags.Count > 0)
             {
                 allFoodStrings.Clear();
@@ -97,23 +95,25 @@ namespace FoodWarDecisionEngine
             // read the file
             string JsonData = "";
 
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/" + JsonFileName));
-            using (var inputStream = await file.OpenReadAsync())
-            using (var classicStream = inputStream.AsStreamForRead())
-            using (var streamReader = new StreamReader(classicStream))
-            {
-                while (streamReader.Peek() >= 0)
-                {
-                    JsonData = streamReader.ReadToEnd();
-                }
+            //var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/" + JsonFileName));
+            //using (var inputStream = await file.OpenReadAsync())
+            //using (var classicStream = inputStream.AsStreamForRead())
+            //using (var streamReader = new StreamReader(classicStream))
+            //{
+            //    while (streamReader.Peek() >= 0)
+            //    {
+            //        JsonData = streamReader.ReadToEnd();
+            //    }
 
-                // read file, start loading
-                if (LoadFinished != null)
-                { 
-                    LoadFinished();
-                }
+            //    // read file, start loading
+            //    if (LoadFinished != null)
+            //    { 
+            //        LoadFinished();
+            //    }
 
-            }
+            //}
+
+            JsonData = System.IO.File.ReadAllText("Assets\\Data.txt");
 
             // save string as JSON
             JsonObject fileDataAsJsonObj = JsonObject.Parse(JsonData);
@@ -135,6 +135,8 @@ namespace FoodWarDecisionEngine
 
                 allTags.Add(newTag);
             }
+
+            LoadFinished();
 
             foreach (JsonValue restaurantJsonVal in restaurantsArray)
             {

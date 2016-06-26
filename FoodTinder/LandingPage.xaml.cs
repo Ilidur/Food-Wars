@@ -43,7 +43,7 @@ namespace FoodTinder
             keyWords = new List<string>();
             keyWords.Add("start");
 
-            detector = new SpeachDetector(keyWords);
+            detector = new SpeachDetector(keyWords, Dispatcher);
 
             detector.SwapPageCallback += SwapPage;
             detector.Initialise();

@@ -65,7 +65,7 @@ namespace FoodTinder
                 trackValidity.Add(true);
             }
 
-
+            
             //Timer stuff
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, timerSpan);
@@ -87,37 +87,23 @@ namespace FoodTinder
             FoodWarDecisionEngine.DecisionStorage.LoadFinished += Loading;
 
             FoodWarDecisionEngine.DecisionStorage.Deserialize(fullLocationsList);
-
-
             constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
-
-
-
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            detector = new SpeachDetector(constraints);
-            detector.PickedFood += PickSuggestion;
-            await detector.Initialise();
-
-            listOfFoodTypes = new List<string>(constraints);
         }
 
         public async void Loading()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
                 constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
 
-                detector = new SpeachDetector(constraints);
+            detector = new SpeachDetector(constraints, Dispatcher);
+            await detector.Initialise();
                 detector.PickedFood += PickSuggestion;
 
                 listOfFoodTypes = new List<string>(constraints);
-            });
         }
 
         //ADD SPAWNER PROPER
@@ -133,7 +119,6 @@ namespace FoodTinder
         /// <returns></returns>
         private int PickTrack()
         {
-
             List<int> validTracks = new List<int>();
 
             for (int i = 0; i < trackValidity.Count; ++i)
@@ -152,7 +137,7 @@ namespace FoodTinder
             {
                 Random rand = new Random();
                 return validTracks[rand.Next(validTracks.Count)];
-            }
+            }   
         }
 
         /// <summary>
@@ -177,7 +162,7 @@ namespace FoodTinder
 
                 listOfFoodTypes.Remove(type);
             }
-
+            
             return type;
         }
 
@@ -227,7 +212,7 @@ namespace FoodTinder
                 Debug.WriteLine("ERR: FOOD TYPE EXISTS");
             }
         }
-
+        
         /// <summary>
         /// Call when animation for travel finishes.
         /// 

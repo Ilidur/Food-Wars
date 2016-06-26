@@ -13,8 +13,8 @@
         <Grid.RenderTransform>
             <CompositeTransform/>
         </Grid.RenderTransform>
-        <TextBlock x:Name="text" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
-        	<Run FontSize="40" Text="TextBlock"/>
+        <TextBlock x:Name="text" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" FontSize="29.333">
+        	<Run Text="TextBlock"/>
         </TextBlock>
     </Grid>
 </UserControl>

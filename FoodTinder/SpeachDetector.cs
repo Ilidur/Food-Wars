@@ -5,6 +5,7 @@ using System.Collections.Generic;
 //using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI.Core;
 //using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,6 +19,7 @@ namespace FoodTinder
 {
     class SpeachDetector
     {
+        CoreDispatcher dispatcher;
         public Func<Task> SwapPageCallback;
         public Action<string> PickedFood;
 
@@ -25,9 +27,10 @@ namespace FoodTinder
         List<string> constraints;
 
 
-        public SpeachDetector(List<string> constraintItems)
+        public SpeachDetector(List<string> constraintItems, CoreDispatcher newDispacher)
         {
             constraints = constraintItems;
+            dispatcher = newDispacher;
         }
 
         public async Task Initialise()
@@ -45,13 +48,14 @@ namespace FoodTinder
         
         public async Task OnSearchStop()
         {
-            if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
+            //if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
             { 
-                await this.speachRecognizer.StopRecognitionAsync();
+                //await this.speachRecognizer.StopRecognitionAsync();
 
                 this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated -= OnSpeechResult;
-                speachRecognizer = null;
+                
                 speachRecognizer.Dispose();
+                speachRecognizer = null;
             }
         }
 
@@ -78,26 +82,35 @@ namespace FoodTinder
           Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender,
           Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
-            if ((args.Result.Confidence == Windows.Media.SpeechRecognition.SpeechRecognitionConfidence.High) ||
-                (args.Result.Confidence == Windows.Media.SpeechRecognition.SpeechRecognitionConfidence.Medium))
-            {
-                //var messageDialog = new Windows.UI.Popups.MessageDialog(args.Result.Text, "Message Recieved");
-                //await messageDialog.ShowAsync();
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+             {
+                 var a = constraints;
 
-                if (constraints.Contains(args.Result.Text.ToLower()))
-                {
-                    if(SwapPageCallback != null)
-                    {
-                        await SwapPageCallback();
+                 if (args.Result.Constraint == null)
+                     return;
+
+                 if ((args.Result.Confidence == Windows.Media.SpeechRecognition.SpeechRecognitionConfidence.High) ||
+                     (args.Result.Confidence == Windows.Media.SpeechRecognition.SpeechRecognitionConfidence.Medium))
+                 {
+                    //var messageDialog = new Windows.UI.Popups.MessageDialog(args.Result.Text, "Message Recieved");
+                    //await messageDialog.ShowAsync();
+
+                    if (constraints.Contains(args.Result.Text.ToLower()))
+                     {
+                         if (SwapPageCallback != null)
+                         {
+                             await SwapPageCallback();
+                         }
+                         else
+                         {
+                             PickedFood(args.Result.Text);
+                         }
+
+                        //AddVote(speechRecogniztionResult.Text);
                     }
-                    else
-                    {
-                        PickedFood(args.Result.Text);
-                    }
-                    
-                    //AddVote(speachRecogniztionResult.Text);
-                }
-            }
+                 }
+             });
+            
         }
 
     }
