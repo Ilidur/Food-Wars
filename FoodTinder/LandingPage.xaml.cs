@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -25,7 +26,7 @@ namespace FoodTinder
     /// </summary>
     public sealed partial class LandingPage : Page
     {
-        private DispatcherTimer timer;
+        //private DispatcherTimer timer;
         private SpeachDetector detector;
 
         List<string> keyWords;
@@ -43,7 +44,11 @@ namespace FoodTinder
             keyWords.Add("start");
 
             detector = new SpeachDetector(keyWords);
+
             detector.SwapPageCallback += SwapPage;
+            detector.Initialise();
+
+           
             //await detector.OnSearchStart();
         }
 
@@ -52,14 +57,15 @@ namespace FoodTinder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SwapPage()
+        public async Task SwapPage()
         {
             //timer.Stop();
 
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await detector.OnSearchStop();
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                detector.OnSearchStop();
                 this.Frame.Navigate(typeof(SuggestionPage));
             });
 

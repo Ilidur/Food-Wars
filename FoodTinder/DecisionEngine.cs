@@ -75,6 +75,8 @@ namespace FoodWarDecisionEngine
 
             if(allTags.Count > 0)
             {
+                allFoodStrings.Clear();
+                allPossibleFoods.Clear();
                 foreach(Tag currentTag in allTags)
                 {
                     allFoodStrings.Add(currentTag.name);
@@ -101,8 +103,11 @@ namespace FoodWarDecisionEngine
                 }
 
                 // read file, start loading
-                LoadFinished();
-            
+                if (LoadFinished != null)
+                { 
+                    LoadFinished();
+                }
+
             }
 
             // save string as JSON

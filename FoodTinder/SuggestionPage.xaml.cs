@@ -83,22 +83,31 @@ namespace FoodTinder
 
             string fullLocationsList = "Data.txt";
 
+            FoodWarDecisionEngine.DecisionStorage.LoadFinished += Loading;
+
             FoodWarDecisionEngine.DecisionStorage.Deserialize(fullLocationsList);
 
 
             constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
 
-            detector = new SpeachDetector(constraints);
-            detector.PickedFood += PickSuggestion;
-
-            listOfFoodTypes = new List<string>(constraints);
-            FoodWarDecisionEngine.DecisionStorage.LoadFinished += Loading;
+            
 
         }
 
-        public void Loading()
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            base.OnNavigatedTo(e);
+
+            detector = new SpeachDetector(constraints);
+            detector.PickedFood += PickSuggestion;
+            await detector.Initialise();
+
+            listOfFoodTypes = new List<string>(constraints);
+        }
+
+        public async void Loading()
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
@@ -237,9 +246,9 @@ namespace FoodTinder
         }
 
         ///HOOK INTO VOICE
-        private void PickSuggestion(string type)
+        async private void PickSuggestion(string type)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (activeSuggestions.ContainsKey(type))

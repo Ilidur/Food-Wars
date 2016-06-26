@@ -18,7 +18,7 @@ namespace FoodTinder
 {
     class SpeachDetector
     {
-        public Action SwapPageCallback;
+        public Func<Task> SwapPageCallback;
         public Action<string> PickedFood;
 
         Windows.Media.SpeechRecognition.SpeechRecognizer speachRecognizer;
@@ -28,7 +28,12 @@ namespace FoodTinder
         public SpeachDetector(List<string> constraintItems)
         {
             constraints = constraintItems;
-            OnSearchStart();
+        }
+
+        public async Task Initialise()
+        {
+
+            await OnSearchStart();
         }
 
         public async Task OnSearchStart()
@@ -38,10 +43,12 @@ namespace FoodTinder
         
         public async Task OnSearchStop()
         {
-            await this.speachRecognizer.StopRecognitionAsync();
+            if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing) { 
+                await this.speachRecognizer.StopRecognitionAsync();
+            }
         }
 
-        async Task StartMessageListener()
+        public async Task StartMessageListener()
         {
             //   var messageDialog = new Windows.UI.Popups.MessageDialog("LISTENING", "Message Recieved");
             //   await messageDialog.ShowAsync();
@@ -49,7 +56,7 @@ namespace FoodTinder
                 new Windows.Media.SpeechRecognition.SpeechRecognitionListConstraint(constraints));
         }
 
-        async Task StartListeningForConstraintAsync(Windows.Media.SpeechRecognition.ISpeechRecognitionConstraint constraint)
+        public async Task StartListeningForConstraintAsync(Windows.Media.SpeechRecognition.ISpeechRecognitionConstraint constraint)
         {
             if (speachRecognizer == null)
             {
@@ -62,8 +69,8 @@ namespace FoodTinder
             }
             speachRecognizer.Constraints.Clear();
             speachRecognizer.Constraints.Add(constraint);
-            await speachRecognizer.CompileConstraintsAsync();
-            await speachRecognizer.ContinuousRecognitionSession.StartAsync();
+            await speachRecognizer.CompileConstraintsAsync() ;
+            await speachRecognizer.ContinuousRecognitionSession.StartAsync() ;
         }
 
         async void OnSpeechResult(
@@ -80,7 +87,7 @@ namespace FoodTinder
                 {
                     if(SwapPageCallback != null)
                     {
-                        SwapPageCallback();
+                        await SwapPageCallback();
                     }
                     else
                     {
