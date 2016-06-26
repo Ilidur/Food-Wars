@@ -86,37 +86,33 @@ namespace FoodTinder
             FoodWarDecisionEngine.DecisionStorage.LoadFinished += Loading;
 
             FoodWarDecisionEngine.DecisionStorage.Deserialize(fullLocationsList);
-
-
             constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
-
-            
-
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            detector = new SpeachDetector(constraints);
-            detector.PickedFood += PickSuggestion;
-            await detector.Initialise();
+            //detector = new SpeachDetector(constraints);
+            //detector.PickedFood += PickSuggestion;
+            //await detector.Initialise();
 
-            listOfFoodTypes = new List<string>(constraints);
+            //listOfFoodTypes = new List<string>(constraints);
         }
 
         public async void Loading()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
+            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            //() =>
+            //{
+            constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
 
-                detector = new SpeachDetector(constraints);
-                detector.PickedFood += PickSuggestion;
+            detector = new SpeachDetector(constraints, Dispatcher);
+            await detector.Initialise();
+            detector.PickedFood += PickSuggestion;
 
-                listOfFoodTypes = new List<string>(constraints);
-            });
+            listOfFoodTypes = new List<string>(constraints);
+            //});
         }
 
         //ADD SPAWNER PROPER
