@@ -39,12 +39,11 @@ namespace FoodTinder
 
     class Points
     {
-        List<FoodWarDecisionEngine.Restaurant> allRestruants;
-        List<FoodItem> allFoodItems;
-        List<FoodItem> topFoodItems;
+        static List<FoodWarDecisionEngine.Restaurant> allRestruants;
+        static List<FoodItem> allFoodItems;
+        static List<FoodItem> topFoodItems;
 
-        public Points(List<FoodWarDecisionEngine.Restaurant> restaurants,
-            List<FoodWarDecisionEngine.Tag> tags)
+        public Points()
         {
             List<FoodWarDecisionEngine.Tag> foodItems = FoodWarDecisionEngine.DecisionStorage.GetListOfAllTags();
             allFoodItems = new List<FoodItem>();
@@ -53,7 +52,7 @@ namespace FoodTinder
                 allFoodItems.Add(new FoodItem(currentFoodItem.name, 0, currentFoodItem.ID));
             }
 
-            allRestruants = restaurants;
+            allRestruants = FoodWarDecisionEngine.DecisionStorage.GetListOfAllRestaurants();
         }
 
         public void addPointsToFoodItem(string foodName)

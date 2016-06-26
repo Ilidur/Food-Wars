@@ -44,6 +44,8 @@ namespace FoodTinder
         List<string> constraints;
         SpeechDetector detector;
 
+        //Points
+        Points pointsSystem;
 
         public SuggestionPage()
         {
@@ -80,6 +82,9 @@ namespace FoodTinder
 
             FoodWarDecisionEngine.DecisionStorage.Deserialize(fullLocationsList);
             constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
+
+            //
+            pointsSystem = new Points();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -225,9 +230,15 @@ namespace FoodTinder
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                if (activeSuggestions.ContainsKey(type))
+                if(type == "done")
+                {
+                    this.Frame.Navigate(typeof(results));
+                }
+                else if (activeSuggestions.ContainsKey(type))
                 {
                     FoodWarDecisionEngine.DecisionStorage.AddFood(type);
+
+                    pointsSystem.addPointsToFoodItem(type);
 
                     ((Grid)activeSuggestions[type].FindName("grid")).Background = new SolidColorBrush(Windows.UI.Colors.Green);
 

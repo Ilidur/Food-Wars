@@ -89,6 +89,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="Assets\QM9zdOH0.jpg-large" />
+    <None Include="Assets\s6Os0v3m.jpg-large" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +105,9 @@
       <DependentUpon>MyUserControl1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Points.cs" />
+    <Compile Include="results.xaml.cs">
+      <DependentUpon>results.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SpeechDetector.cs" />
     <Compile Include="SuggestionPage.xaml.cs">
       <DependentUpon>SuggestionPage.xaml</DependentUpon>
@@ -137,6 +142,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MyUserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="results.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
