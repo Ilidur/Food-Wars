@@ -89,8 +89,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="Assets\QM9zdOH0.jpg-large" />
-    <None Include="Assets\s6Os0v3m.jpg-large" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +120,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Data.txt" />
+    <Content Include="Assets\QM9zdOH0.jpg" />
+    <Content Include="Assets\s6Os0v3m.jpg" />
     <Content Include="Assets\sddefault.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
