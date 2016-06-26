@@ -237,7 +237,7 @@ namespace FoodTinder
                 {
                     FoodWarDecisionEngine.DecisionStorage.AddFood(type);
 
-                    ((Grid)activeSuggestions[type].FindName("grid")).Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    ((Grid)activeSuggestions[type].FindName("grid")).Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF,0x57,0xD9,0x57));
 
                     activeSuggestions.Remove(type);
                 }
