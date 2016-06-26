@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -69,20 +67,19 @@ namespace FoodWarDecisionEngine
             System.IO.File.WriteAllLines(fileName, linesToSave);
         }
 
-        public static void ReadAllOptions(string fromFile, Dictionary<string, int> to)
+        public static List<string> GetListOfAllFoods()
         {
-            // read json file with all options and suggestions
-            string[] fromList = File.ReadAllLines(fromFile);
+            List<string> allFoodStrings = new List<string>();
 
-            // save into array to send to UI
-            // save into dictionnary to serve as food type counter
-            foreach (string option in fromList)
+            if(allTags.Count > 0)
             {
-                if (!to.ContainsKey(option))
+                foreach(Tag currentTag in allTags)
                 {
-                    to.Add(option, 0);
+                    allFoodStrings.Add(currentTag.name);
                 }
             }
+
+            return allFoodStrings;
         }
 
         public static async void Deserialize(string JsonFileName)
