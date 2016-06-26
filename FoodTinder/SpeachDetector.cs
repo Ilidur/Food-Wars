@@ -21,7 +21,7 @@ namespace FoodTinder
         public Func<Task> SwapPageCallback;
         public Action<string> PickedFood;
 
-        Windows.Media.SpeechRecognition.SpeechRecognizer speachRecognizer;
+        public Windows.Media.SpeechRecognition.SpeechRecognizer speachRecognizer;
         List<string> constraints;
 
 
@@ -32,9 +32,11 @@ namespace FoodTinder
 
         public async Task Initialise()
         {
+            speachRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
             await OnSearchStart();
         }
+        
 
         public async Task OnSearchStart()
         {
@@ -43,8 +45,13 @@ namespace FoodTinder
         
         public async Task OnSearchStop()
         {
-            if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing) { 
+            if (this.speachRecognizer.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
+            { 
                 await this.speachRecognizer.StopRecognitionAsync();
+
+                this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated -= OnSpeechResult;
+                speachRecognizer = null;
+                speachRecognizer.Dispose();
             }
         }
 
@@ -58,19 +65,13 @@ namespace FoodTinder
 
         public async Task StartListeningForConstraintAsync(Windows.Media.SpeechRecognition.ISpeechRecognitionConstraint constraint)
         {
-            if (speachRecognizer == null)
-            {
-                this.speachRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
-                this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated += OnSpeechResult;
-            }
-            else
-            {
-                await this.speachRecognizer.ContinuousRecognitionSession.StopAsync();
-            }
+            this.speachRecognizer.ContinuousRecognitionSession.ResultGenerated += OnSpeechResult;
+
             speachRecognizer.Constraints.Clear();
             speachRecognizer.Constraints.Add(constraint);
             await speachRecognizer.CompileConstraintsAsync() ;
-            await speachRecognizer.ContinuousRecognitionSession.StartAsync() ;
+            await speachRecognizer.ContinuousRecognitionSession.StartAsync();
+            
         }
 
         async void OnSpeechResult(

@@ -62,7 +62,6 @@ namespace FoodTinder
             //timer.Stop();
 
             await detector.OnSearchStop();
-
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
