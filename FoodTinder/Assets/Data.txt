@@ -1,0 +1,61 @@
+{
+	"allLocations": [{
+		"name": "Shakespeare's Pub",
+		"tags": [
+			1, 2, 3, 4
+		],
+		"rating": "3.49"
+	}, {
+		"name": "Phoenix",
+		"tags": [
+			1, 2, 4
+		],
+		"rating": "4.32"
+	}, {
+		"name": "Pizza Hut",
+		"tags": [
+			2, 5
+		],
+		"rating": "3.06"
+	}, {
+		"name": "The Mint",
+		"tags": [
+			6
+		],
+		"rating": "4.73"
+	}, {
+		"name": "Wok 'N' Grill",
+		"tags": [
+			7
+		],
+		"rating": "2.42"
+	}, {
+		"name": "Pizza Express",
+		"tags": [
+			2, 5
+		],
+		"rating": "4.30"
+	}],
+	"tags": [{
+		"id": 1,
+		"name": "burger"
+	}, {
+		"id": 2,
+		"name": "pizza"
+	}, {
+		"id": 3,
+		"name": "sunday roast"
+	}, {
+		"id": 4,
+		"name": "hot dog"
+	}, {
+		"id": 5,
+		"name": "italian"
+	}, {
+		"id": 6,
+		"name": "curry"
+	}, {
+		"id": 7,
+		"name": "chinese"
+	}]
+}

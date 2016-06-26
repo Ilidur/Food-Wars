@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 
 
@@ -40,7 +42,6 @@ namespace FoodTinder
         //Suggestions
         private List<string> listOfFoodTypes;
         private Dictionary<string, Grid> activeSuggestions;
-        private Dictionary<string, Grid> pickedSuggestions;
 
         //Spawn control
         private int numOfTracks;
@@ -80,11 +81,33 @@ namespace FoodTinder
             //Suggestions manager stuff
             activeSuggestions = new Dictionary<string, Grid>();
 
+            string fullLocationsList = "Data.txt";
+
+            FoodWarDecisionEngine.DecisionStorage.Deserialize(fullLocationsList);
+
+
+            constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
+
             detector = new SpeachDetector(constraints);
             detector.PickedFood += PickSuggestion;
 
             listOfFoodTypes = new List<string>(constraints);
-            
+            FoodWarDecisionEngine.DecisionStorage.LoadFinished += Loading;
+
+        }
+
+        public void Loading()
+        {
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
+
+                detector = new SpeachDetector(constraints);
+                detector.PickedFood += PickSuggestion;
+
+                listOfFoodTypes = new List<string>(constraints);
+            });
         }
 
         //ADD SPAWNER PROPER
@@ -216,14 +239,18 @@ namespace FoodTinder
         ///HOOK INTO VOICE
         private void PickSuggestion(string type)
         {
-            if (activeSuggestions.ContainsKey(type))
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
             {
-                pickedSuggestions.Add(type, activeSuggestions[type]);
+                if (activeSuggestions.ContainsKey(type))
+                {
+                    FoodWarDecisionEngine.DecisionStorage.AddFood(type);
 
-                //MOVE TO POSITION ADDITIONAL LOGIC
+                    activeSuggestions[type].Background = new SolidColorBrush(Windows.UI.Colors.Green);
 
-                activeSuggestions.Remove(type);
-            }
+                    activeSuggestions.Remove(type);
+                }
+            });
         }
 
         private async void OccupyTrack(int index, int msDelay)

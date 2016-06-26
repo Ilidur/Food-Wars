@@ -29,6 +29,8 @@ namespace FoodWarDecisionEngine
 
     class DecisionStorage
     {
+        public static Action LoadFinished;
+
         public static Dictionary<string, int> allPossibleFoods = new Dictionary<string, int>();
         static List<string> linesToSave = new List<string>();
         static string fileName = @"C:\Users\Public\TestFolder\LocationsJson.txt";
@@ -97,6 +99,10 @@ namespace FoodWarDecisionEngine
                 {
                     JsonData = streamReader.ReadToEnd();
                 }
+
+                // read file, start loading
+                LoadFinished();
+            
             }
 
             // save string as JSON
