@@ -9,7 +9,7 @@
 
     <Canvas>
         <Canvas.Background>
-            <ImageBrush ImageSource="/Assets/sddefault.jpg"/>
+            <ImageBrush ImageSource="/Assets/s6Os0v3m.jpg" Stretch="UniformToFill"/>
         </Canvas.Background>
     </Canvas>
 </Page>

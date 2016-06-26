@@ -121,7 +121,16 @@
   <ItemGroup>
     <Content Include="Assets\Data.txt" />
     <Content Include="Assets\QM9zdOH0.jpg" />
+    <Content Include="Assets\QM9zdOH0.scale-100.jpg" />
+    <Content Include="Assets\QM9zdOH0.scale-125.jpg" />
+    <Content Include="Assets\QM9zdOH0.scale-150.jpg" />
+    <Content Include="Assets\QM9zdOH0.scale-200.jpg" />
+    <Content Include="Assets\QM9zdOH0.scale-400.jpg" />
     <Content Include="Assets\s6Os0v3m.jpg" />
+    <Content Include="Assets\s6Os0v3m.scale-100.jpg" />
+    <Content Include="Assets\s6Os0v3m.scale-125.jpg" />
+    <Content Include="Assets\s6Os0v3m.scale-150.jpg" />
+    <Content Include="Assets\s6Os0v3m.scale-400.jpg" />
     <Content Include="Assets\sddefault.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
