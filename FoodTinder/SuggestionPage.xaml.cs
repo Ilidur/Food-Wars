@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 
 
 
@@ -42,10 +43,23 @@ namespace FoodTinder
         private Dictionary<string, Grid> activeSuggestions;
         private Dictionary<string, Grid> pickedSuggestions;
 
+        //Spawn control
+        private int numOfTracks;
+        private List<bool> trackValidity;
+
         public SuggestionPage()
         {
             this.InitializeComponent();
 
+            //Track stuff
+            numOfTracks = 5;
+            trackValidity = new List<bool>();
+            for (int i = 0; i < numOfTracks; i++)
+            {
+                trackValidity.Add(true);
+            }
+
+            
             //Timer stuff
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0,0,timerSpan);
@@ -63,9 +77,13 @@ namespace FoodTinder
             activeSuggestions = new Dictionary<string, Grid>();
             suggestionTracker = new Dictionary<string, bool>();
 
+            //Populate propper
             suggestionTracker.Add("Chips", true);
             suggestionTracker.Add("Fish", true);
-            suggestionTracker.Add("Burger", true); //Populate propper
+            suggestionTracker.Add("Burger", true);
+            suggestionTracker.Add("Steak", true);
+            suggestionTracker.Add("Sushi", true);
+            suggestionTracker.Add("Chicken", true);
 
             listOfFoodTypes = new List<string>(suggestionTracker.Keys);
         }
@@ -74,7 +92,35 @@ namespace FoodTinder
         private void TimerTick(object sender, object e)
         {
             Random rand = new Random();
-            CreateSuggestion(PickRandomType(), rand.Next(300));
+            CreateSuggestion(PickRandomType(), PickTrack());
+        }
+
+        /// <summary>
+        /// Returns index to valid track.
+        /// </summary>
+        /// <returns></returns>
+        private int PickTrack()
+        {
+
+            List<int> validTracks = new List<int>();
+
+            for(int i = 0; i < trackValidity.Count; ++i)
+            {
+                if(trackValidity[i])
+                {
+                    validTracks.Add(i);
+                }
+            }
+
+            if(validTracks.Count == 0)
+            {
+                return -1;
+            }
+            else
+            {
+                Random rand = new Random();
+                return validTracks[rand.Next(validTracks.Count)];
+            }   
         }
 
         /// <summary>
@@ -119,15 +165,16 @@ namespace FoodTinder
         ///     'false' - I dont want this;
         ///     Parameter is stored in the suggestion.Tag directly as 'bool';
         /// </param>
-        private void CreateSuggestion(string type, float horizValue)
+        private void CreateSuggestion(string type, int trackNum)
         {
             if(type == null)
             {
                 return;
             }
 
-            if (!activeSuggestions.ContainsKey(type))
+            if (!activeSuggestions.ContainsKey(type) && trackNum != -1)
             {
+                OccupyTrack(trackNum, 2000);
                 bool tempTag = GetTypeAcceptDeny(type);
 
                 Grid suggestion = new Grid();
@@ -141,8 +188,8 @@ namespace FoodTinder
                 {
                     suggestion.Background = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
-                Canvas.SetTop(suggestion, 100);
-                Canvas.SetLeft(suggestion, horizValue);
+                Canvas.SetTop(suggestion, 100); //CHANGE THIS
+                Canvas.SetLeft(suggestion, trackNum * RenderSize.Width / numOfTracks + 20);
                 suggestion.Name = type;
                 suggestion.Tag = tempTag;
                 mainCanvas.Children.Add(suggestion);
@@ -174,6 +221,8 @@ namespace FoodTinder
 
         /// <summary>
         /// Call when animation for travel finishes.
+        /// 
+        /// ADD MORE LOGIC
         /// </summary>
         private void DoneWithSuggestion(string type)
         {
@@ -195,6 +244,20 @@ namespace FoodTinder
 
                 activeSuggestions.Remove(type);
             }
+        }
+
+        private async void OccupyTrack(int index, int msDelay)
+        {
+            trackValidity[index] = false;
+
+            await Task.Delay(msDelay);
+
+            FreeUpTrack(index);
+        }
+
+        private void FreeUpTrack(int index)
+        {
+            trackValidity[index] = true;
         }
 
     }

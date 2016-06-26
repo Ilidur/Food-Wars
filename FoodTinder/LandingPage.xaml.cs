@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,18 +25,26 @@ namespace FoodTinder
     /// </summary>
     public sealed partial class LandingPage : Page
     {
-        Canvas mainCanvas;
-
         private DispatcherTimer timer;
+        private SpeachDetector detector;
+
+        List<string> keyWords;
 
         public LandingPage()
         {
             this.InitializeComponent();
 
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 3);
-            timer.Tick += SwapPage;
-            timer.Start();
+            //timer = new DispatcherTimer();
+            //timer.Interval = new TimeSpan(0, 0, 3);
+            //timer.Tick += SwapPage;
+            //timer.Start();
+
+            keyWords = new List<string>();
+            keyWords.Add("start");
+
+            detector = new SpeachDetector(keyWords);
+            detector.SwapPageCallback += SwapPage;
+            //await detector.OnSearchStart();
         }
 
         /// <summary>
@@ -42,11 +52,16 @@ namespace FoodTinder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SwapPage(object sender, object e)
+        public void SwapPage()
         {
-            timer.Stop();
-            this.Frame.Navigate(typeof(SuggestionPage));
-            ///code
+            //timer.Stop();
+
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                this.Frame.Navigate(typeof(SuggestionPage));
+            });
+
         }
     }
 }
