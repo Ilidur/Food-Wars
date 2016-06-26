@@ -76,6 +76,7 @@ namespace FoodWarDecisionEngine
                 foreach(Tag currentTag in allTags)
                 {
                     allFoodStrings.Add(currentTag.name);
+                    allPossibleFoods.Add(currentTag.name, 0);
                 }
             }
 
