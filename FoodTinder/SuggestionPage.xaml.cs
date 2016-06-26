@@ -55,8 +55,8 @@ namespace FoodTinder
             //Main canvas area
             //Dimensions should changed depending on situation.
             mainCanvas = new Canvas();
-            mainCanvas.Width = RenderSize.Width;
-            mainCanvas.Height = RenderSize.Height;
+            //mainCanvas.Width = RenderSize.Width;
+            //mainCanvas.Height = RenderSize.Height;
             this.Content = mainCanvas;
 
             //Suggestions manager stuff
@@ -86,13 +86,20 @@ namespace FoodTinder
             int size = listOfFoodTypes.Count;
             Random rand = new Random();
 
-            string type = listOfFoodTypes[rand.Next(size)];
+            string type = null;
 
-            while(activeSuggestions.ContainsKey(type))
+            if (listOfFoodTypes.Count != 0)
             {
                 type = listOfFoodTypes[rand.Next(size)];
-            }
 
+                while (activeSuggestions.ContainsKey(type))
+                {
+                    type = listOfFoodTypes[rand.Next(size)];
+                }
+
+                listOfFoodTypes.Remove(type);
+            }
+            
             return type;
         }
 
@@ -114,6 +121,11 @@ namespace FoodTinder
         /// </param>
         private void CreateSuggestion(string type, float horizValue)
         {
+            if(type == null)
+            {
+                return;
+            }
+
             if (!activeSuggestions.ContainsKey(type))
             {
                 bool tempTag = GetTypeAcceptDeny(type);
