@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Animation;
 
 
 
@@ -41,7 +42,7 @@ namespace FoodTinder
 
         //Suggestions
         private List<string> listOfFoodTypes;
-        private Dictionary<string, Grid> activeSuggestions;
+        private Dictionary<string, MyUserControl1> activeSuggestions;
 
         //Spawn control
         private int numOfTracks;
@@ -64,10 +65,10 @@ namespace FoodTinder
                 trackValidity.Add(true);
             }
 
-            
+
             //Timer stuff
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0,0,timerSpan);
+            timer.Interval = new TimeSpan(0, 0, timerSpan);
             timer.Tick += TimerTick;
             timer.Start();
 
@@ -79,7 +80,7 @@ namespace FoodTinder
             this.Content = mainCanvas;
 
             //Suggestions manager stuff
-            activeSuggestions = new Dictionary<string, Grid>();
+            activeSuggestions = new Dictionary<string, MyUserControl1>();
 
             string fullLocationsList = "Data.txt";
 
@@ -90,7 +91,7 @@ namespace FoodTinder
 
             constraints = FoodWarDecisionEngine.DecisionStorage.GetListOfAllFoods();
 
-            
+
 
         }
 
@@ -135,15 +136,15 @@ namespace FoodTinder
 
             List<int> validTracks = new List<int>();
 
-            for(int i = 0; i < trackValidity.Count; ++i)
+            for (int i = 0; i < trackValidity.Count; ++i)
             {
-                if(trackValidity[i])
+                if (trackValidity[i])
                 {
                     validTracks.Add(i);
                 }
             }
 
-            if(validTracks.Count == 0)
+            if (validTracks.Count == 0)
             {
                 return -1;
             }
@@ -151,7 +152,7 @@ namespace FoodTinder
             {
                 Random rand = new Random();
                 return validTracks[rand.Next(validTracks.Count)];
-            }   
+            }
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace FoodTinder
 
                 listOfFoodTypes.Remove(type);
             }
-            
+
             return type;
         }
 
@@ -198,7 +199,7 @@ namespace FoodTinder
         /// </param>
         private void CreateSuggestion(string type, int trackNum)
         {
-            if(type == null)
+            if (type == null)
             {
                 return;
             }
@@ -207,30 +208,26 @@ namespace FoodTinder
             {
                 OccupyTrack(trackNum, 2000);
 
-                Grid suggestion = new Grid();
-                suggestion.Width = 100f;
-                suggestion.Height = 100f;
-                suggestion.Background = new SolidColorBrush(Windows.UI.Colors.Gray); //Set to green if picked
-                Canvas.SetTop(suggestion, 100); //CHANGE THIS
+                MyUserControl1 suggestion = new MyUserControl1();
+
                 Canvas.SetLeft(suggestion, trackNum * RenderSize.Width / numOfTracks + 20);
                 suggestion.Name = type;
                 suggestion.Tag = false; //Set to true if picked
                 mainCanvas.Children.Add(suggestion);
 
-                TextBlock foodType = new TextBlock();
+                TextBlock foodType = (TextBlock)suggestion.FindName("text");
                 foodType.Text = type;
-                foodType.VerticalAlignment = VerticalAlignment.Bottom;
-                foodType.HorizontalAlignment = HorizontalAlignment.Center;
-                suggestion.Children.Add(foodType);
 
                 activeSuggestions.Add(type, suggestion);
+
+                Animate(suggestion);
             }
             else
             {
                 Debug.WriteLine("ERR: FOOD TYPE EXISTS");
             }
         }
-        
+
         /// <summary>
         /// Call when animation for travel finishes.
         /// 
@@ -255,7 +252,7 @@ namespace FoodTinder
                 {
                     FoodWarDecisionEngine.DecisionStorage.AddFood(type);
 
-                    activeSuggestions[type].Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    ((Grid)activeSuggestions[type].FindName("grid")).Background = new SolidColorBrush(Windows.UI.Colors.Green);
 
                     activeSuggestions.Remove(type);
                 }
@@ -276,5 +273,26 @@ namespace FoodTinder
             trackValidity[index] = true;
         }
 
+        private void Animate(UIElement xElement)
+        {
+            Random rnd = new Random();
+            DoubleAnimation xWoosh = new DoubleAnimation()
+            {
+                From = -50,
+                To = 1200,
+                Duration = TimeSpan.FromSeconds(rnd.Next(10, 30))
+            };
+
+            xElement.RenderTransform = new CompositeTransform();
+            Storyboard xSb = new Storyboard();
+            Storyboard.SetTargetProperty(xWoosh, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
+
+            Storyboard.SetTarget(xWoosh, xElement);
+
+            xSb.Children.Add(xWoosh);
+            xSb.Begin();
+
+
+        }
     }
 }

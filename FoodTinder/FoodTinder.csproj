@@ -99,6 +99,9 @@
     <Compile Include="LandingPage.xaml.cs">
       <DependentUpon>LandingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyUserControl1.xaml.cs">
+      <DependentUpon>MyUserControl1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SpeachDetector.cs" />
     <Compile Include="SuggestionPage.xaml.cs">
       <DependentUpon>SuggestionPage.xaml</DependentUpon>
@@ -129,6 +132,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="LandingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyUserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
